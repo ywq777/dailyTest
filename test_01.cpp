@@ -52,3 +52,4 @@ int main()
     vec.push_back(A()); // 理应调用A的右值引用参数的赋值函数，却调用了左值引用的赋值函数
     return 0;
 }
+ 
