@@ -1,54 +1,55 @@
 #include <bits/stdc++.h>
 using namespace std;
-// 容器里面元素的类型
+
+class B;
+
 class A
 {
 public:
-    // 带左值引用参数的赋值函数
-    A& operator=(const A &src)
+    A() {cout << "A()" << endl;}
+    ~A() {cout << "~A()" << endl;}
+//    shared_ptr<B> _ptrb; // ǿ����ָ�뽻�����õ�����
+    void method()
     {
-        cout << "operator=" << endl;
-        return *this;
+        cout << "A �ķ�����" << endl;
     }
-    // 带右值引用参数的赋值函数
-    A& operator=(A &&src) noexcept
-    {
-        cout << "operator=(A&&)" << endl;
-        return *this;
-    }
+    weak_ptr<B> _ptrb;
 };
 
-// 容器的类型
-template<typename Ty>
-class Vector
+class B
 {
 public:
-    // 引用左值的push_back函数
-    void push_back(const Ty &val)
+    B() {cout << "B()" << endl;}
+    ~B() { cout << "~B()" << endl;}
+//    shared_ptr<A> _ptra;
+    void method()
     {
-        cout << " 1" << endl;
-        mvec[mcur++] = val;
+        shared_ptr<A> ps = _ptra.lock();
+        if(ps != nullptr)
+        {
+            ps->method();
+        }
+        else
+        {
+            cout << "A��Դ������" << endl;
+        }
     }
-    // 引用右值的push_back函数
-    void push_back(Ty &&val)
-    {
-        // 这里传递val时，要用move转换成右值引用类型，
-        // 因为val本身是左值，有名字有地址，见前面引用折叠部分的说明
-        cout << " 2" << endl;
-        mvec[mcur++] = std::forward<Ty>(val);
-    }
-private:
-    enum { VEC_SIZE = 10 };
-    Ty mvec[VEC_SIZE];
-    int mcur;
 
+    weak_ptr<A> _ptra;
 };
 
 int main()
 {
-    Vector<A> vec{};
-    A a;
-    vec.push_back(a); // 调用A的左值引用的赋值函数
-    vec.push_back(A()); // 理应调用A的右值引用参数的赋值函数，却调用了左值引用的赋值函数
-    return 0;
+    shared_ptr<B> pb(new B());
+    {
+        shared_ptr<A> pa(new A());
+        pa->_ptrb = pb;
+        pb->_ptra = pa;
+
+        cout << pa.use_count() << endl;
+        cout << pb.use_count() << endl;
+    }
+    pb->method();
+
+    return  0;
 }
