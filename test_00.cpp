@@ -8,10 +8,10 @@ class A
 public:
     A() {cout << "A()" << endl;}
     ~A() {cout << "~A()" << endl;}
-//    shared_ptr<B> _ptrb; // Ç¿ÖÇÄÜÖ¸Õë½»²æÒıÓÃµÄÎÊÌâ
+//    shared_ptr<B> _ptrb; // å¼ºæ™ºèƒ½æŒ‡é’ˆäº¤å‰å¼•ç”¨çš„é—®é¢˜
     void method()
     {
-        cout << "A µÄ·½·¨£¡" << endl;
+        cout << "A çš„æ–¹æ³•ï¼" << endl;
     }
     weak_ptr<B> _ptrb;
 };
@@ -31,7 +31,7 @@ public:
         }
         else
         {
-            cout << "A×ÊÔ´²»´æÔÚ" << endl;
+            cout << "Aèµ„æºä¸å­˜åœ¨" << endl;
         }
     }
 
